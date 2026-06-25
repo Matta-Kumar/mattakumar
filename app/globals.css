@@ -1,26 +1,341 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-paper: #ffffff;
+  --color-paper-deep: #f4f3fa;
+  --color-ink: #0b0a14;
+  --color-ink-soft: #15131f;
+  --color-smoke: #6e6c7a;
+  --color-smoke-light: #9b99a8;
+  --color-fog: rgba(11, 10, 20, 0.1);
+  --color-fog-light: rgba(255, 255, 255, 0.14);
+  --color-signal: #5b3df5;
+  --color-signal-soft: #8b78ff;
+  --color-signal-deep: #3c22c4;
+  --color-signal-tint: #efecff;
+
+  --font-sans: "Switzer", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: initial;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-signal);
+  color: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}
+
+/* Display type rhythm */
+.display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+}
+
+/* Custom cursor — only on precise pointers */
+@media (pointer: fine) {
+  body.has-custom-cursor,
+  body.has-custom-cursor a,
+  body.has-custom-cursor button {
+    cursor: none;
+  }
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ffffff;
+  mix-blend-mode: difference;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cursor-ring .cursor-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* Animated underline links */
+.link-line {
+  position: relative;
+  display: inline-block;
+}
+
+.link-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.link-line:hover::after,
+.link-line:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Button with sweep fill */
+.btn-sweep {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-sweep > span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-signal);
+  transform: translateY(101%);
+  transition: transform 0.5s var(--ease-out-expo);
+  z-index: 0;
+}
+
+.btn-sweep:hover::before,
+.btn-sweep:focus-visible::before {
+  transform: translateY(0);
+}
+
+.btn-sweep:hover,
+.btn-sweep:focus-visible {
+  color: var(--color-paper);
+}
+
+/* Marquee */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Split text helpers */
+[data-split] {
+  visibility: hidden;
+}
+
+[data-split].is-ready {
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-split] {
+    visibility: visible;
+  }
+}
+
+/* Service rows — ink flood on hover */
+.row-fill {
+  position: relative;
+  isolation: isolate;
+}
+
+.row-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.45s var(--ease-out-expo);
+  z-index: -1;
+}
+
+.row-fill:hover::before {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+/* Selection-style title highlight */
+.hl {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hl .hl-over {
+  position: absolute;
+  top: -0.14em;
+  bottom: -0.14em;
+  left: -0.12em;
+  right: -0.12em;
+  padding: 0.14em 0.12em;
+  box-sizing: border-box;
+  background: var(--color-signal);
+  color: #ffffff;
+  border-radius: 3px;
+  clip-path: inset(0 100% 0 0);
+  white-space: nowrap;
+}
+
+/* Orbiting platform chips (hero finale) */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.orbit-ring {
+  animation: orbit-spin 26s linear infinite;
+}
+
+.orbit-chip {
+  animation: orbit-spin-rev 26s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring,
+  .orbit-chip {
+    animation: none;
+  }
+}
+
+/* Process timeline */
+.step-node {
+  transition: background-color 0.4s, border-color 0.4s, transform 0.4s;
+}
+
+.step-active .step-node {
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+  transform: scale(1.2);
+}
+
+.step-active .step-num {
+  color: var(--color-signal);
+}
+
+/* Floating hover preview (industries/services) */
+.hover-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  will-change: transform;
+}
+
+/* Service glyph draw-on-hover */
+.glyph path,
+.glyph circle,
+.glyph rect,
+.glyph line,
+.glyph polyline {
+  transition: stroke 0.3s;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
