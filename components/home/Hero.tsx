@@ -71,8 +71,8 @@ function Gen1Visual({ domRef }: { domRef: RefObject<HTMLDivElement | null> }) {
       style={{ opacity: 0 }}
     >
       <div
-        className="absolute left-1/2 xl:left-[42%] top-3 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 pointer-events-auto"
-        style={{ width: "min(560px, 90%)" }}
+        className="absolute left-[42%] top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+        style={{ width: "560px" }}
       >
         <div className="rounded-xl overflow-hidden shadow-2xl">
 
@@ -145,8 +145,8 @@ function Gen2Visual({ domRef }: { domRef: RefObject<HTMLDivElement | null> }) {
       style={{ opacity: 0 }}
     >
       <div
-        className="absolute left-1/2 xl:left-[58%] top-3 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 pointer-events-auto"
-        style={{ width: "min(540px, 90%)" }}
+        className="absolute left-[58%] top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+        style={{ width: "540px" }}
       >
         <div className="rounded-xl overflow-hidden shadow-2xl bg-white">
 
@@ -237,8 +237,8 @@ function Gen3Visual({ domRef }: { domRef: RefObject<HTMLDivElement | null> }) {
       style={{ opacity: 0 }}
     >
       <div
-        className="absolute left-1/2 xl:left-[42%] top-3 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 pointer-events-auto"
-        style={{ width: "min(560px, 90%)" }}
+        className="absolute left-[42%] top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+        style={{ width: "560px" }}
       >
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[10px] uppercase tracking-widest text-[#999]">Same query &mdash; every AI platform</span>
@@ -376,8 +376,8 @@ function Gen4Visual({ domRef }: { domRef: RefObject<HTMLDivElement | null> }) {
       style={{ opacity: 0 }}
     >
       <div
-        className="absolute left-1/2 xl:left-[36%] top-3 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 pointer-events-auto"
-        style={{ width: "min(500px, 90%)" }}
+        className="absolute left-[36%] top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+        style={{ width: "500px" }}
       >
         <div
           className="rounded-2xl overflow-hidden"
@@ -483,7 +483,7 @@ export default function Hero() {
       !section || !textWrap || !stage || !satish ||
       !satishCenter || !satishLeft || !satishRight ||
       !gen1 || !gen2 || !gen3 || !gen4 ||
-      !progress || !tlWrap || texts.length < 5
+      !platformPanel || !progress || !tlWrap || texts.length < 5
     ) return;
 
     const measure = () => {
@@ -501,9 +501,6 @@ export default function Hero() {
       gsap.set([satishLeft, satishRight], { autoAlpha: 0 });
       return () => window.removeEventListener("resize", measure);
     }
-
-    const isMobile = window.innerWidth < 768;
-    const xShift = isMobile ? 0 : 120;
 
     let platformTween: gsap.core.Tween | null = null;
     if (platformScroll) {
@@ -540,7 +537,7 @@ export default function Hero() {
     gsap.set(texts.slice(1), { autoAlpha: 0, y: 36 });
     gsap.set([gen1, gen2, gen3, gen4], { autoAlpha: 0, y: 40 });
     gsap.set(satish, { x: 0 });
-    gsap.set(satishCenter, { autoAlpha: 1, scale: 1, y: 0, x: 0, xPercent: 0, left: isMobile ? "7.5%" : "50%", transformOrigin: "50% 50%" });
+    gsap.set(satishCenter, { autoAlpha: 1, scale: 1, y: 0, x: 0, left: "50%", transformOrigin: "50% 50%" });
     gsap.set(satishRight, { autoAlpha: 0, scale: 0.96, y: 0, x: 0, left: "28%", transformOrigin: "50% 50%" });
     gsap.set(satishLeft, { autoAlpha: 0, scale: 0.96, y: 0, x: 0, left: "72%", transformOrigin: "50% 50%" });
     gsap.set(platformPanel, { autoAlpha: 1 });
@@ -564,9 +561,7 @@ export default function Hero() {
     });
 
     const portraitTransition = (target: "center" | "left" | "right", duration = 0.75) => {
-      const targetLeft = isMobile
-        ? "7.5%"
-        : target === "center" ? "33.333%" : target === "left" ? "72%" : "28%";
+      const targetLeft = target === "center" ? "33.333%" : target === "left" ? "72%" : "28%";
       const targetSrc = target === "center"
         ? "/satish/portrait.png"
         : target === "left"
@@ -588,7 +583,7 @@ export default function Hero() {
 
     tl.addLabel("era0");
     tl.to(platformPanel, { autoAlpha: 0, duration: 0.9, ease: "power2.out" }, "<0.15");
-    tl.to(satish, { x: xShift, duration: 0.9, ease: "power2.inOut" });
+    tl.to(satish, { x: 120, duration: 0.9, ease: "power2.inOut" });
     tl.to(tlWrap, { autoAlpha: 1, duration: 0.6 }, "<0.15");
     tl.to(satishCenter, { autoAlpha: 1, scale: 1.04, y: 0, duration: 0.35, ease: "power2.out" }, "<0");
     portraitTransition("left", 0.75);
@@ -605,7 +600,7 @@ export default function Hero() {
     tl.to(texts[1], { autoAlpha: 0, y: -36, duration: 0.7 });
     tl.to(texts[2], { autoAlpha: 1, y: 0,   duration: 0.7 }, "<0.25");
     tl.to(gen1, { autoAlpha: 0, y: -40, duration: 0.2 }, "<");
-    tl.to(satish, { x: -xShift, duration: 0.8, ease: "power2.inOut" }, "<");
+    tl.to(satish, { x: -120, duration: 0.8, ease: "power2.inOut" }, "<");
     portraitTransition("right", 0.75);
     tl.to(satishLeft, { autoAlpha: 0, duration: 0.1 }, "<");
     tl.to(gen2, { autoAlpha: 1, y: 0,   duration: 0.8 }, "<0.15");
@@ -618,7 +613,7 @@ export default function Hero() {
     tl.to(texts[2], { autoAlpha: 0, y: -36, duration: 0.7 });
     tl.to(texts[3], { autoAlpha: 1, y: 0,   duration: 0.7 }, "<0.25");
     tl.to(gen2, { autoAlpha: 0, y: -40, duration: 0.2 }, "<");
-    tl.to(satish, { x: xShift, duration: 0.8, ease: "power2.inOut" }, "<");
+    tl.to(satish, { x: 120, duration: 0.8, ease: "power2.inOut" }, "<");
     portraitTransition("left", 0.75);
     tl.to(satishRight, { autoAlpha: 0, duration: 0.1 }, "<");
     tl.to(gen3, { autoAlpha: 1, y: 0,   duration: 0.8 }, "<0.15");
@@ -688,13 +683,12 @@ export default function Hero() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative h-[380vh] md:h-[560vh] bg-paper text-ink">
+    <section ref={sectionRef} className="relative h-[560vh] bg-paper text-ink">
       <div className="sticky top-0 h-svh overflow-hidden flex flex-col">
+        <div className="flex-1 grid md:grid-cols-12 gap-6 md:gap-8 items-center px-6 md:px-12 lg:px-24 pt-24 pb-2 min-h-0">
 
-        <div className="flex-1 grid grid-rows-[48svh_1fr] md:grid-rows-none md:grid-cols-12 gap-4 md:gap-8 md:items-center px-6 md:px-12 lg:px-24 pt-0 md:pt-24 pb-2 min-h-0">
-
-          {/* Left — text column — below stage on mobile */}
-          <div className="order-last md:order-none md:col-span-4 flex flex-col justify-start pt-3 md:justify-center md:pt-0 relative z-40">
+          {/* Left — text column */}
+          <div className="md:col-span-4 flex flex-col justify-center relative z-40">
             <div ref={textWrapRef} className="relative">
 
               {/* 0 — entry */}
@@ -775,33 +769,33 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right — visual stage — above text on mobile */}
+          {/* Right — visual stage */}
           <div
             ref={stageRef}
-            className="order-first md:order-none block md:col-span-8 md:col-start-5 relative h-full md:h-[78vh] min-h-0 overflow-hidden"
+            className="hidden md:block md:col-span-8 md:col-start-5 relative h-[78vh] min-h-0"
           >
             {/* Satish portrait — centered in right half, cropped at upper body */}
             <div
               ref={satishRef}
-              className="absolute inset-0 z-10 md:z-30 pointer-events-none flex items-start justify-center"
+              className="absolute inset-0 z-30 pointer-events-none flex items-start justify-center"
               style={{ opacity: 0 }}
             >
               <img
                 ref={satishCenterRef}
                 src="/satish/portrait.png"
                 alt="Satish Kumar Matta"
-                className="pointer-events-none absolute top-0 h-auto w-[85%] md:w-[40%] -translate-x-1/2"
+                className="pointer-events-none absolute top-0 h-auto w-[40%] -translate-x-1/2"
                 style={{
-                  left: "50%",
-                  WebkitMaskImage: "linear-gradient(to bottom, black 45%, transparent 65%)",
-                  maskImage: "linear-gradient(to bottom, black 45%, transparent 65%)",
+                  left: "33.333%",
+                  WebkitMaskImage: "linear-gradient(to bottom, black 38%, transparent 55%)",
+                  maskImage: "linear-gradient(to bottom, black 38%, transparent 55%)",
                 }}
               />
               <img
                 ref={satishLeftRef}
                 src="/satish/left.png"
                 alt=""
-                className="pointer-events-none absolute top-0 h-auto w-[85%] md:w-[40%] -translate-x-1/2"
+                className="pointer-events-none absolute top-0 h-auto w-[40%] -translate-x-1/2"
                 aria-hidden="true"
                 style={{ left: "72%", opacity: 0 }}
               />
@@ -809,7 +803,7 @@ export default function Hero() {
                 ref={satishRightRef}
                 src="/satish/right.png"
                 alt=""
-                className="pointer-events-none absolute top-0 h-auto w-[85%] md:w-[40%] -translate-x-1/2"
+                className="pointer-events-none absolute top-0 h-auto w-[40%] -translate-x-1/2"
                 aria-hidden="true"
                 style={{ left: "28%", opacity: 0 }}
               />
@@ -865,7 +859,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="flex absolute bottom-6 left-6 md:left-auto md:right-5 lg:right-8 z-40 items-center gap-2 label text-smoke-light">
+        <div className="hidden md:flex absolute bottom-6 right-5 lg:right-8 z-40 items-center gap-2 label text-smoke-light">
           Scroll
           <span className="inline-block animate-bounce text-sm leading-none" aria-hidden="true">&#8595;</span>
         </div>
