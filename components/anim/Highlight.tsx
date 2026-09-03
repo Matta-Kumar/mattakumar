@@ -1,10 +1,6 @@
 "use client";
 
 import { useEffect, useRef, type ElementType, type ReactNode } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 /** Inline "text selection" highlight. Wrap emphasized words inside an HlTitle. */
 export function Hl({ children }: { children: ReactNode }) {
@@ -26,7 +22,6 @@ export default function HlTitle({
   as: Tag = "h2",
   className,
   children,
-  start = "top 85%",
 }: {
   as?: ElementType;
   className?: string;
@@ -38,39 +33,27 @@ export default function HlTitle({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const overs = el.querySelectorAll<HTMLElement>(".hl-over");
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      gsap.set(overs, { clipPath: "inset(0 0% 0 0)" });
+      el.classList.add("is-visible");
       return;
     }
 
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: el, start, once: true },
-    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        el.classList.add("is-visible");
+        observer.disconnect();
+      },
+      { threshold: 0.01, rootMargin: "0px 0px -10% 0px" }
+    );
 
-    tl.from(el, { opacity: 0, y: 32, duration: 0.9, ease: "power3.out" });
-    if (overs.length) {
-      tl.to(
-        overs,
-        {
-          clipPath: "inset(0 0% 0 0)",
-          duration: 0.85,
-          ease: "power4.inOut",
-          stagger: 0.18,
-        },
-        "-=0.35"
-      );
-    }
-
-    return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
-    };
-  }, [start]);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <Tag ref={ref} className={className}>
+    <Tag ref={ref} className={`reveal-up${className ? ` ${className}` : ""}`}>
       {children}
     </Tag>
   );

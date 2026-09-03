@@ -203,7 +203,28 @@ body {
   }
 }
 
-/* Split text helpers */
+/* Scroll reveals */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 40px));
+}
+
+.reveal-up.is-visible {
+  animation: reveal-up 1.1s var(--ease-out-expo) both;
+  animation-delay: var(--reveal-delay, 0s);
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 40px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 [data-split] {
   visibility: hidden;
 }
@@ -213,6 +234,17 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .reveal-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal-up.is-visible .hl-over {
+    animation: none;
+    clip-path: inset(0 0% 0 0);
+  }
+
   [data-split] {
     visibility: visible;
   }
@@ -260,6 +292,19 @@ body {
   border-radius: 3px;
   clip-path: inset(0 100% 0 0);
   white-space: nowrap;
+}
+
+.reveal-up.is-visible .hl-over {
+  animation: highlight-sweep 0.85s var(--ease-out-expo) 0.45s both;
+}
+
+@keyframes highlight-sweep {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
 }
 
 /* Orbiting platform chips (hero finale) */
@@ -326,6 +371,137 @@ body {
 .glyph line,
 .glyph polyline {
   transition: stroke 0.3s;
+}
+
+/* WordPress post content (Elementor-authored HTML). Content is unpredictable raw HTML from
+   WordPress (dangerouslySetInnerHTML) - contain anything that could force horizontal overflow
+   (long unbroken words/URLs, wide tables, unwrapped code blocks) rather than trusting the source
+   markup to behave. */
+.wp-content {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--color-ink);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.wp-content p {
+  margin: 1.4em 0;
+}
+
+.wp-content p:first-child {
+  margin-top: 0;
+}
+
+.wp-content h2,
+.wp-content h3,
+.wp-content h4,
+.wp-content h5 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 2.2em 0 0.7em;
+  scroll-margin-top: 96px;
+}
+
+.wp-content h2 {
+  font-size: 1.6em;
+}
+
+.wp-content h3 {
+  font-size: 1.3em;
+}
+
+.wp-content h4,
+.wp-content h5 {
+  font-size: 1.05em;
+}
+
+.wp-content ul,
+.wp-content ol {
+  margin: 1.4em 0;
+  padding-left: 1.4em;
+}
+
+.wp-content ul {
+  list-style: disc;
+}
+
+.wp-content ol {
+  list-style: decimal;
+}
+
+.wp-content li + li {
+  margin-top: 0.5em;
+}
+
+.wp-content a {
+  color: var(--color-signal);
+  text-underline-offset: 3px;
+}
+
+.wp-content strong {
+  font-weight: 600;
+}
+
+.wp-content blockquote {
+  margin: 1.8em 0;
+  padding-left: 1.2em;
+  border-left: 2px solid var(--color-signal);
+  color: var(--color-smoke);
+}
+
+.wp-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 1.8em 0;
+}
+
+/* Tables from WordPress can carry more columns than a narrow viewport can fit even after
+   wrapping every word - width:100% alone doesn't stop the browser's auto table layout from
+   growing past its container to satisfy each column's min-content width (this was the actual
+   cause of the mobile overflow: a 5-column table forced ~530px on a ~342px-wide content area).
+   Make the table its own scroll container instead of letting it blow out the page. */
+.wp-content table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-collapse: collapse;
+  margin: 1.8em 0;
+  font-size: 0.92em;
+}
+
+.wp-content pre {
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wp-content code {
+  overflow-wrap: break-word;
+}
+
+.wp-content th,
+.wp-content td {
+  border: 1px solid var(--color-fog);
+  padding: 0.6em 0.8em;
+  text-align: left;
+  /* Undo the .wp-content break-word rule inside cells: letting cells keep their natural
+     word-boundary min-content width is what makes an over-wide table actually trigger the
+     table's own overflow-x:auto scrollbar, instead of every column being crushed down to a
+     handful of px and every word breaking mid-character. */
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: normal;
+}
+
+.wp-content hr {
+  border: none;
+  border-top: 1px solid var(--color-fog);
+  margin: 2.5em 0;
 }
 
 .sr-only {

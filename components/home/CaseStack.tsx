@@ -5,34 +5,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HlTitle from "@/components/anim/Highlight";
 import MediaPlaceholder from "@/components/media/MediaPlaceholder";
+import type { CaseStudy } from "@/sanity/lib/queries";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CASES = [
-  {
-    metric: "+212%",
-    line: "Organic revenue in 12 months",
-    client: "Sample — D2C skincare brand",
-    services: ["SEO · AEO", "Content", "Web"],
-    note: "Full-bleed lifestyle/product photo of the client brand, or a cinemagraph of the product",
-  },
-  {
-    metric: "3.1x",
-    line: "Return on ad spend, sustained two quarters",
-    client: "Sample — ecommerce retailer",
-    services: ["Performance ads", "Ecommerce", "Design"],
-    note: "Full-bleed campaign creative or storefront photography from the ads account",
-  },
-  {
-    metric: "5x",
-    line: "Qualified pipeline from organic + social",
-    client: "Sample — B2B SaaS",
-    services: ["SEO · GEO", "Social", "Content"],
-    note: "Full-bleed product UI screenshot composition or branded illustration",
-  },
-];
-
-export default function CaseStack() {
+export default function CaseStack({ cases: CASES }: { cases: CaseStudy[] }) {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -85,9 +62,9 @@ export default function CaseStack() {
 
       <div ref={wrapRef}>
         {CASES.map((c, i) => (
-          <article key={c.metric} className="case-card sticky top-24 px-6 md:px-12 pb-6">
+          <article key={c.slug} className="case-card sticky top-24 px-6 md:px-12 pb-6">
             <a
-              href="/services"
+              href={`/case-studies/${c.slug}`}
               data-cursor="View case"
               className="group block relative h-[72vh] rounded-3xl overflow-hidden will-change-transform"
               style={{ transformOrigin: "center top" }}

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import Cursor from "@/components/Cursor";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import RouteContent from "@/components/RouteContent";
+import { getServices, getEngagementModels } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "Satish Kumar Matta — Digital Growth Partner | SEO · AI Search · Ads · Web",
@@ -11,11 +13,13 @@ export const metadata: Metadata = {
     "Eighteen years of putting brands where people look. SEO & AI visibility, performance ads, content, social, ecommerce, web, and design — senior expertise, end to end.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [services, engagementModels] = await Promise.all([getServices(), getEngagementModels()]);
+
   return (
     <html lang="en" className="h-full antialiased">
       <head>
@@ -34,9 +38,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <SmoothScroll>
-          <Nav />
+          <Nav services={services} engagementModels={engagementModels} />
           <main id="main" className="flex-1">
-            {children}
+            <RouteContent>{children}</RouteContent>
           </main>
           <Footer />
         </SmoothScroll>

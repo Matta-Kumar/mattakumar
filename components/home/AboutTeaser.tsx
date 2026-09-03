@@ -1,21 +1,24 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import HlTitle from "@/components/anim/Highlight";
 import FadeUp from "@/components/anim/FadeUp";
-import MediaPlaceholder from "@/components/media/MediaPlaceholder";
 
 export default function AboutTeaser() {
   return (
     <section className="px-6 md:px-12 py-24 md:py-32 bg-paper-deep">
       <div className="grid md:grid-cols-12 gap-12 items-center">
         <div className="md:col-span-4">
-          <MediaPlaceholder
-            kind="photo"
-            ratio="4/5"
-            note="Editorial B&W portrait of Satish — candid, at work. This photo carries the whole section."
-            className="rounded-2xl"
-          />
+          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-ink-soft">
+            <Image
+              src="/satish/Satish-bw-at-work.png"
+              alt="Satish Kumar Matta at work"
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
         <div className="md:col-span-7 md:col-start-6">
           <p className="label text-signal mb-8">Who you work with</p>

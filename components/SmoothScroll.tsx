@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -20,17 +21,44 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     lenis.on("scroll", ScrollTrigger.update);
     (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
+    let frame = 0;
     const raf = (time: number) => {
-      lenis.raf(time * 1000);
+      lenis.raf(time);
+      frame = window.requestAnimationFrame(raf);
     };
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
+    frame = window.requestAnimationFrame(raf);
 
     return () => {
-      gsap.ticker.remove(raf);
+      window.cancelAnimationFrame(frame);
       lenis.destroy();
     };
   }, []);
+
+  useEffect(() => {
+    gsap.ticker.wake();
+    gsap.globalTimeline.resume();
+
+    let firstFrame = 0;
+    let secondFrame = 0;
+    let cancelled = false;
+
+    const refresh = () => {
+      if (cancelled) return;
+      firstFrame = window.requestAnimationFrame(() => {
+        secondFrame = window.requestAnimationFrame(() => {
+          if (!cancelled) ScrollTrigger.refresh();
+        });
+      });
+    };
+
+    document.fonts.ready.then(refresh);
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [pathname]);
 
   return <>{children}</>;
 }

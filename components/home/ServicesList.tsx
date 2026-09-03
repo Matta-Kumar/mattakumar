@@ -1,72 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import HlTitle, { Hl } from "@/components/anim/Highlight";
 import FadeUp from "@/components/anim/FadeUp";
 import Magnetic from "@/components/anim/Magnetic";
-import MediaPlaceholder from "@/components/media/MediaPlaceholder";
+import type { Service } from "@/sanity/lib/queries";
 
-const SERVICES = [
-  {
-    n: "01",
-    title: "SEO · GEO · AEO",
-    benefit: "Be the answer on Google — and inside AI.",
-    desc: "Classic rankings still matter, but answers increasingly come from AI. We optimize for both: technical foundations and topical authority for Google, plus citation strategies for ChatGPT, Perplexity, and AI Overviews.",
-    deliverables: ["Technical audits", "Topical maps & clusters", "On & off-page SEO", "AI citation optimization", "Local SEO"],
-    visualNote: "Floating SERP card morphing into an AI answer card that cites the brand — violet accents on white",
-  },
-  {
-    n: "02",
-    title: "Performance ads",
-    benefit: "Every dollar accountable to pipeline.",
-    desc: "Media buying with an engineer’s discipline: tracking that is actually correct, creative that earns the click, and budgets that scale only when the numbers prove it.",
-    deliverables: ["Google & Meta ads", "Landing pages", "Creative testing", "Conversion tracking", "Weekly ROAS reporting"],
-    visualNote: "Ads dashboard composition with a rising ROAS curve and creative thumbnails — violet data accents",
-  },
-  {
-    n: "03",
-    title: "Content marketing",
-    benefit: "One insight becomes twenty assets.",
-    desc: "We plan, produce, and distribute content that builds authority and feeds every other channel — search, social, email, and sales.",
-    deliverables: ["Editorial strategy", "Briefs & production", "SEO content", "Repurposing systems", "Newsletters"],
-    visualNote: "A single article exploding into layered formats — post, thread, video, email — stacked paper metaphor",
-  },
-  {
-    n: "04",
-    title: "Social media",
-    benefit: "Attention earned, day after day.",
-    desc: "Audiences behave differently on every platform. We build a presence that feels native to each — with creative and cadence your team can sustain.",
-    deliverables: ["Channel strategy", "Content calendars", "Short-form video", "Community management", "Analytics"],
-    visualNote: "Floating platform UI cards (reel, post, thread) orbiting a brand mark — clean 3D, soft shadows",
-  },
-  {
-    n: "05",
-    title: "Web development",
-    benefit: "Your site is your best salesperson.",
-    desc: "Fast, accessible, search-ready websites — from static marketing sites to dynamic web apps — engineered to convert, not just to look good.",
-    deliverables: ["Next.js & WordPress builds", "Landing page systems", "CMS setup", "Core Web Vitals", "Ongoing maintenance"],
-    visualNote: "Wireframe morphing into a finished polished webpage, split-state composition on white",
-  },
-  {
-    n: "06",
-    title: "Ecommerce",
-    benefit: "From product page to repeat purchase.",
-    desc: "Stores engineered to sell: product pages that rank, checkouts that don’t leak revenue, and the email flows and analytics that keep customers coming back.",
-    deliverables: ["Shopify & WooCommerce", "Conversion optimization", "Merchandising & feeds", "Email flows", "Revenue analytics"],
-    visualNote: "Premium product card with add-to-cart motion trail and a rising revenue sparkline",
-  },
-  {
-    n: "07",
-    title: "Brand & design",
-    benefit: "Design that makes every channel work harder.",
-    desc: "Identity systems and campaign creative with one coherent voice — so every ad, post, and page looks unmistakably like you.",
-    deliverables: ["Identity systems", "Campaign creative", "Ad & social creative", "Design systems", "Decks & collateral"],
-    visualNote: "Brand identity board — logo grid, color chips, type specimens — arranged as a designer’s desk flat-lay",
-  },
-];
-
-export default function ServicesList() {
-  const [active, setActive] = useState<number | null>(null);
+export default function ServicesList({ services: SERVICES }: { services: Service[] }) {
+  const [active, setActive] = useState<number | null>(0);
 
   return (
     <section id="services" className="px-6 md:px-12 py-24 md:py-32">
@@ -80,7 +23,7 @@ export default function ServicesList() {
         <p className="hidden md:block label text-smoke pb-2">07</p>
       </div>
 
-      <div className="border-t border-fog" onMouseLeave={() => setActive(null)}>
+      <div className="border-t border-fog" onMouseLeave={() => setActive(0)}>
         {SERVICES.map((s, i) => {
           const open = active === i;
           return (
@@ -148,17 +91,18 @@ export default function ServicesList() {
                               <span>Book a call about this</span>
                             </a>
                           </Magnetic>
-                          <a href="/services" className="link-line text-[13px] font-medium">
+                          <Link href={`/services/${s.slug}`} className="link-line text-[13px] font-medium">
                             Full details →
-                          </a>
+                          </Link>
                         </div>
                       </div>
-                      <div className="md:col-span-5 md:col-start-8">
-                        <MediaPlaceholder
-                          kind="photo"
-                          ratio="16/10"
-                          note={s.visualNote}
-                          className="rounded-2xl"
+                      <div className="md:col-span-5 md:col-start-8 relative aspect-[16/10] rounded-2xl overflow-hidden">
+                        <Image
+                          src={s.image}
+                          alt={s.alt}
+                          fill
+                          sizes="(min-width: 768px) 40vw, 100vw"
+                          className="object-cover"
                         />
                       </div>
                     </div>

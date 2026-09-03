@@ -1,11 +1,5 @@
 import Link from "next/link";
-
-const SOCIALS = [
-  { href: "https://www.linkedin.com/in/mattakumar/", label: "LinkedIn" },
-  { href: "https://x.com/mattakumar", label: "X / Twitter" },
-  { href: "https://www.youtube.com/@mattakumar", label: "YouTube" },
-  { href: "https://www.instagram.com/mattakumar/", label: "Instagram" },
-];
+import { SOCIALS } from "@/lib/socials";
 
 export default function Footer() {
   return (
@@ -22,7 +16,9 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li><Link href="/" className="link-line">Home</Link></li>
               <li><Link href="/services" className="link-line">Services</Link></li>
-              <li><Link href="/about" className="link-line">About</Link></li>
+              <li><Link href="/case-studies" className="link-line">Case Studies</Link></li>
+              <li><Link href="/insights" className="link-line">Insights</Link></li>
+              <li><a href="https://community.mattakumar.com/communities" target="_blank" rel="noopener noreferrer" className="link-line">Community</a></li>
               <li><Link href="/contact" className="link-line">Contact</Link></li>
             </ul>
           </div>
@@ -43,7 +39,7 @@ export default function Footer() {
         <div className="py-10">
           <p
             aria-hidden="true"
-            className="display text-[15vw] leading-[0.85] text-paper/[0.06] select-none whitespace-nowrap"
+            className="display text-center text-[15vw] leading-[0.85] text-paper/[0.06] select-none whitespace-nowrap"
           >
             Matta Kumar
           </p>

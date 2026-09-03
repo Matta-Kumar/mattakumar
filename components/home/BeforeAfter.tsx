@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import HlTitle, { Hl } from "@/components/anim/Highlight";
 import CompareSwap from "@/components/media/CompareSwap";
-import MediaPlaceholder from "@/components/media/MediaPlaceholder";
 
 const STATS = [
   { channel: "Search & AI", bad: "Page 2 · uncited", good: "#1 · cited by AI" },
@@ -14,16 +14,16 @@ const STATS = [
 function SceneLayer({ winning }: { winning: boolean }) {
   return (
     <div className="relative h-full w-full bg-ink-soft">
-      <MediaPlaceholder
-        kind="photo"
-        dark
-        ratio="auto"
-        className="absolute inset-0 w-full h-full"
-        note={
+      <Image
+        src={winning ? "/after.png" : "/before.png"}
+        alt={
           winning
-            ? "AFTER photo — exact same storefront, now alive: warm light, customers at the counter, the owner mid-handover smiling, tablet showing a rising chart, busy street outside"
-            : "BEFORE photo — a beautiful but empty store at dusk: the owner alone behind the counter checking their phone, cool dim light, empty street through the window"
+            ? "Same storefront, now busy: the owner handing a customer their bag with a smile, a rising sales chart on screen, people on the street outside"
+            : "A beautiful but empty storefront at dusk: the owner alone behind the counter checking their phone, street empty outside"
         }
+        fill
+        sizes="100vw"
+        className="object-cover"
       />
       <div
         className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink/85 to-transparent pointer-events-none"
