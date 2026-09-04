@@ -4,6 +4,7 @@ import { useState } from "react";
 import HlTitle from "@/components/anim/Highlight";
 import FadeUp from "@/components/anim/FadeUp";
 import type { Industry } from "@/sanity/lib/queries";
+import { INDUSTRY_ICONS, getIndustryIcon } from "@/components/icons/IndustryIcons";
 
 export default function Industries({ industries: INDUSTRIES }: { industries: Industry[] }) {
   const [active, setActive] = useState(0);
@@ -26,6 +27,7 @@ export default function Industries({ industries: INDUSTRIES }: { industries: Ind
       >
         {INDUSTRIES.map((ind, i) => {
           const on = active === i;
+          const Icon = INDUSTRY_ICONS[getIndustryIcon(ind.name)];
           return (
             <FadeUp
               key={ind.name}
@@ -39,13 +41,22 @@ export default function Industries({ industries: INDUSTRIES }: { industries: Ind
                   on ? "bg-ink border-ink" : "border-fog"
                 }`}
               >
-                <span
-                  className={`label transition-colors duration-300 group-hover:text-paper/40 ${
-                    on ? "text-paper/40" : "text-smoke-light"
-                  }`}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`label transition-colors duration-300 group-hover:text-paper/40 ${
+                      on ? "text-paper/40" : "text-smoke-light"
+                    }`}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div
+                    className={`w-9 h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-300 group-hover:bg-paper/10 group-hover:text-paper ${
+                      on ? "bg-paper/10 text-paper" : "bg-signal-tint text-signal"
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px] md:w-5 md:h-5" aria-hidden="true" />
+                  </div>
+                </div>
                 <h3
                   className={`display mt-4 md:mt-6 transition-colors duration-300 group-hover:text-paper ${
                     on ? "text-paper" : ""
